@@ -1,0 +1,5 @@
+#!/bin/bash
+
+/home/rodericj/webapps/force_quared/apache2/bin/stop
+sleep 3
+/home/rodericj/webapps/force_quared/apache2/bin/start

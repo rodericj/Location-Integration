@@ -1,0 +1,4 @@
+#!/bin/bash
+
+export PYTHONPATH=/home/rodericj/webapps/force_quared/lib/python2.5
+/home/rodericj/webapps/force_quared/apache2/bin/httpd -f /home/rodericj/webapps/force_quared/apache2/conf/httpd.conf -k start
