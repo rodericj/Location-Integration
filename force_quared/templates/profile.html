@@ -11,6 +11,8 @@
     <script type="text/javascript">
 
 	var map;
+	var xmlobj;
+	var data;
     function initialize() {
       if (GBrowserIsCompatible()) {
         map = new GMap2(document.getElementById("map_canvas"));
@@ -19,13 +21,99 @@
       }
     }
 
+	function createDataContainer(){
+    	var div=document.getElementById('container');
+    	if(div){return};
+    	var div=document.createElement('div');
+    	div.setAttribute('id','container');
+    	document.getElementsByTagName('body')[0].appendChild(div);
+	}
+	function stateChecker(){
+    	// if request is completed
+    	if(xmlobj.readyState==4){
+        	// if status == 200 display text file
+        	if(xmlobj.status==200|| xmlobj.status==0){
+            	// create data container
+            	createDataContainer();
+				//alert("At this point I've got the XML i think.");
+            	// read XML data
+            	data=xmlobj.responseXML.getElementsByTagName('venue');
+ 				// display XML data
+				alert("hest");
+				alert(data);
+            	displayData();
+        	}
+        	else{
+            	alert('Failed to get response :'+ xmlobj.statusText);
+        	}
+    	}
+	}
+
+	function displayData(){
+    	// reset data container
+		alert("DisplayData");
+    	document.getElementById('container').innerHTML='';
+    	var ul=document.createElement('ul');
+    	for(var i=0;i<data.length;i++){
+    	// create links
+        	var li=document.createElement('li');
+        	var a=document.createElement('a');
+        	// assign 'href' attribute
+        	a.setAttribute('href',data[i].getElementsByTagName('url')[0].firstChild.nodeValue);
+        	// add link labels
+        	a.appendChild(document.createTextNode(data[i].getElementsByTagName('title')[0].firstChild.nodeValue));
+ 			li.appendChild(a);
+     		ul.appendChild(li);
+    	}
+    	document.getElementById('container').appendChild(ul);
+	}
+
+	function nearbyMarkers(latitude, longitude){
+		//alert("nearbyMarkers");
+		doc = "http://api.playfoursquare.com/v1/venues"//?geolat="+latitude+"&geolong="+longitude;
+		//call http://api.playfoursquare.com/v1/venues?geolat=40.7204&geolong=-73.7204	
+		    // check for existing requests
+    	if(xmlobj!=null&&xmlobj.readyState!=0&&xmlobj.readyState!=4){
+        	xmlobj.abort();
+    	}
+    	try{
+        	// instantiate object for Mozilla, Nestcape, etc.
+        	xmlobj=new XMLHttpRequest();
+    	}
+    	catch(e){
+        	try{
+            	// instantiate object for Internet Explorer
+            	xmlobj=new ActiveXObject('Microsoft.XMLHTTP');
+        	}
+        	catch(e){
+            	// Ajax is not supported by the browser
+            	xmlobj=null;
+            	return false;
+        	}
+    	}
+    	// assign state handler
+    	xmlobj.onreadystatechange=stateChecker;
+    	// open socket connection
+    	xmlobj.open('GET',doc,true);
+    	// send GET request
+    	xmlobj.send(null);
+	}
+
+	function nearbyDemo(){
+		//http://api.playfoursquare.com/v1/venues?geolat=40.7204&geolong=-73.7204
+        //map = new GMap2(document.getElementById("map_canvas"));
+        //map.setCenter(new GLatLng(37.4419, -122.1419), 13);
+		map.panTo(new GLatLng(40.7204, -73.7204));
+	}
+
     </script>
 
 </head>
 <body onload="initialize()" onunload="GUnload()">
 <div class = "tabArea" border=1>
 <div>
-you are logged in as {{username}}
+<a href="javascript:nearbyDemo()">move map</a>
+<a href="javascript:nearbyMarkers(40.7204, -73.7204)">getMarkers</a>
 </div>
 <div>
 <a href="/addServices">Add services</a>
@@ -45,9 +133,9 @@ you are logged in as {{username}}
 	</div> -->
     <div class="profileinfo" width: 25%; height:100%; padding:0; float:left; border:2px solid #101010>
         <h2 >Profile Info for: </h2>
-            Picture:<br>
-            Name:<br>
-            Last location:<br>
+            <b>Picture:</b><br>
+            <b>Name: </b>{{username}}<br>
+            <b>Last location:</b><br>
     </div>
 
     <div class =mapcontent id="map_canvas" width: 70%; height:100%; float:right;>

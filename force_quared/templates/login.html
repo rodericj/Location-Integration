@@ -1,19 +1,58 @@
 <html>
 {% if username %}
 logged you in as {{username}} <br>
+	<a href="http://playfoursquare.com/oauth/request_token?oauth_consumer_key={{key}}&oauth_nonce={{nonce}}&oauth_consumer_secret={{secret}}&oauth_timestamp={{timestamp}}">link with params from view</a><br>
+	<a href="{{link}}">link provided by view</a><br>
+	Login using basic:
+<form action="http://api.playfoursquare.com/vi/user" method="post">
+		<input type=text name=PHONE_OR_EMAIL><br>
+		<input type=text name=PASSWORD><br>
+    	<input type="submit" value="get user info"><br>
+</form>
 	<!-- % if hasFoursquare %} -->
+		<a href="http://playfoursquare.com/oauth/request_token?oauth_consumer_key={{key}}&timestamp={{timestamp}}&nonce={{nonce}}">key?</a>" 
+		<a href="http://playfoursquare.com/oauth/request_token?oauth_consumer_key={{key}}&timestamp={{timestamp}}">key?</a>" 
+		<a href="http://playfoursquare.com/oauth/request_token?oauth_consumer_key={{key}}">key?</a>" 
 		Login to foursquare:
-		<form action="/weblogin/" method="post">
-			email: <input type="text" name="emailAddress"><br>
-			password: <input type="text" name="password"><br>
-    		<input type="submit" value="New User" maxlength=10><br>
+		<form action="http://playfoursquare.com/oauth/request_token" method="post"> 
+    		<input type="hidden" name="oauth_nonce" value="{{ nonce }}" >
+    		<input type="hidden" name="oauth_consumer_key" value="{{ key }}">
+    		<input type="hidden" name="oauth_timestamp" value="{{ timestamp }}" >
+    		<!-- <input type="hidden" name="oauth_signature_method" value="HMAC-SHA1" > -->
+    		<input type="hidden" name="oauth_version" value="1.0" >
+    		<input type="submit" value="request_token"><br>
+			<font color=red>{{ loginret }}</font>
+
+		<form action="  http://playfoursquare.com/oauth/access_token" method="post">
+    		<input type="hidden" name="oauth_consumer_key" value="{{ key }}">
+    		<input type="hidden" name="oauth_signature" value="{{ secret }}" >
+    		<input type="hidden" name="oauth_nonce" value="{{ timestamp }}" >
+    		<input type="hidden" name="oauth_timestamp" value="{{ nonce }}" >
+    		<input type="submit" value="access_token"><br>
+			<font color=red>{{ loginret }}</font>
+
+<form action="http://api.playfoursquare.com/v1/authexchange" method="post">
+    		<input type="hidden" name="oauth_consumer_key" value="{{ key }}">
+    		<input type="hidden" name="oauth_signature" value="{{ secret }}" >
+    		<input type="hidden" name="oauth_nonce" value="{{ timestamp }}" >
+    		<input type="hidden" name="oauth_timestamp" value="{{ nonce }}" >
+    		<input type="submit" value="authexchange"><br>
+			<font color=red>{{ loginret }}</font>
+
+ <form action="http://playfoursquare.com/oauth/authorize" method="post">
+    		<input type="hidden" name="oauth_consumer_key" value="{{ key }}">
+    		<input type="hidden" name="oauth_signature" value="{{ secret }}" >
+    		<input type="hidden" name="oauth_nonce" value="{{ timestamp }}" >
+    		<input type="hidden" name="oauth_timestamp" value="{{ nonce }}" >
+    		<input type="submit" value="authorize"><br>
 			<font color=red>{{ loginret }}</font>
 		</form>
 	<!-- % endif %} -->
 
 {% else %}
-		Login:
-		<form action="/weblogin/" method="post">
+		lLogin:
+		<form action="/weblogin/" method="post"> 
+		<form action="http://api.playfoursquare.com/v1/authexchange" method="post">
 			email: <input type="text" name="emailAddress"><br>
 			password: <input type="text" name="password"><br>
     		<input type="submit" value="New User" maxlength=10><br>

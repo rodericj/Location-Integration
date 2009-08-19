@@ -34,7 +34,7 @@ div.tabMain{
 
 div.profileinfo{
     width: 25%;
-    height:95%;
+    height:90%;
     padding:0;
     float:left;
     border:2px solid #101010;
@@ -51,7 +51,7 @@ div.loginArea{
 }
 div.mapcontent{
     width: 70%;
-    height:95%;
+    height:90%;
     float:right;
     border:2px solid #101010;
     background-color:#ffffff;
